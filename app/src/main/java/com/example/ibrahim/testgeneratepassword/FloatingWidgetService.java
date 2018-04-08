@@ -15,7 +15,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.example.ibrahim.testgeneratepassword.data.DBhelper;
 
 /**
  * Created by sonu on 28/03/17.
@@ -27,6 +32,10 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
     private ImageView remove_image_view;
     private Point szWindow = new Point ();
     private View removeFloatingWidgetView;
+    private EditText mFloatEtname,mFloatEtpass;
+    private Button floating_add_label;
+    DBhelper database;
+
 
     private int x_init_cord, y_init_cord, x_init_margin, y_init_margin;
 
@@ -115,6 +124,11 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
 
         //find id of the expanded view layout
         expandedView = mFloatingWidgetView.findViewById(R.id.expanded_container);
+
+        //find id of the edit text
+        mFloatEtname = mFloatingWidgetView.findViewById(R.id.mFloatEtname);
+        mFloatEtpass = mFloatingWidgetView.findViewById(R.id.mFloatEtpass);
+
     }
 
     private void getWindowManagerDefaultDisplay() {
@@ -294,6 +308,8 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
         mFloatingWidgetView.findViewById(R.id.close_floating_view).setOnClickListener(this);
         mFloatingWidgetView.findViewById(R.id.close_expanded_view).setOnClickListener(this);
         mFloatingWidgetView.findViewById(R.id.open_activity_button).setOnClickListener(this);
+        mFloatingWidgetView.findViewById(R.id.floating_add_label).setOnClickListener(this);
+
     }
 
 
@@ -316,7 +332,25 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
 
                 //close the service and remove view from the view hierarchy
                 stopSelf();
+            case R.id.floating_add_label:
+                //add new pssword to sqlite
+                String    mName=mFloatEtname.getText ().toString ();
+                String     mPassword=mFloatEtpass.getText ().toString ();
+                if(mName.isEmpty ()&&mPassword.isEmpty ()) {
+                    Toast.makeText (FloatingWidgetService.this,"no value",Toast.LENGTH_SHORT).show();
+
+                } else{
+
+                    database.insertNewPass (mName,mPassword);
+                    mFloatEtname.setText ("");
+                    mFloatEtpass.setText ("");
+
+                }
+                mFloatEtname.clearFocus ();
+                mFloatEtpass.clearFocus ();
+
                 break;
+
         }
     }
 

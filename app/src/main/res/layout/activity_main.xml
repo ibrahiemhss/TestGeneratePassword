@@ -2,15 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:orientation="vertical">
 
-    <!--  Button to trigger Floating Widget Service -->
-    <Button
-        android:id="@+id/create_floating_widget"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="createFloatingWidget"
-        android:text="@string/create_floating_widget"
+        android:orientation="horizontal">
+    <EditText
+        android:id="@+id/mEtname"
+        android:layout_width="match_parent"
+        android:hint="addm new password"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/mEtpass"
+            android:layout_width="match_parent"
+            android:hint="addm new name"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnAddPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add new pass"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mRv"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent" />
 </LinearLayout>

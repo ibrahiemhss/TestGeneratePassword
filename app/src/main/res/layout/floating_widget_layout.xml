@@ -43,13 +43,14 @@
         <!--   View while view is expanded   -->
         <LinearLayout
             android:id="@+id/expanded_container"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:padding="8dp"
-            android:visibility="gone">
+            >
 
             <ImageView
                 android:id="@+id/floating_widget_image_view"
@@ -62,24 +63,36 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/mFloatEtname"
+                        android:layout_width="match_parent"
+                        android:hint="password"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/mFloatEtpass"
+                        android:layout_width="match_parent"
+                        android:hint="name"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/floating_widget_title_label"
+                </LinearLayout>
+                <Button
+                    android:id="@+id/floating_add_label"
                     android:layout_width="wrap_content"
+                    android:background="@drawable/item_border"
+                    android:padding="5dp"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="@string/floating_widget_label"
-                    android:textColor="@android:color/black"
+                    android:text="@string/floating_add_label"
+                    android:textColor="@color/colorWhite"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/floating_widget_detail_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/floating_widget_details"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="11sp" />
+
             </LinearLayout>
 
             <!--  ImageView to Close Expanded View  -->
