@@ -1,5 +1,6 @@
 package com.example.ibrahim.testgeneratepassword;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -18,19 +19,23 @@ import android.widget.Toast;
 
 import com.example.ibrahim.testgeneratepassword.adapters.PasswordAdapter;
 import com.example.ibrahim.testgeneratepassword.data.DBhelper;
+import com.example.ibrahim.testgeneratepassword.data.PasswordGenerator;
 import com.example.ibrahim.testgeneratepassword.model.Passwords;
 
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     DBhelper database;
     RecyclerView recyclerView;
     PasswordAdapter passwordAdapter;
     List<Passwords> datamodel;
-    private EditText mEtname,mEtpass;
-//    String mName,mPassword;
+    EditText     mEtname;
+    TextView   mTxtPass;
+    String    mName,pass;
+    //    String mName,mPassword;
     Locale localelang;
 
     /*  Permission request code to draw over other apps  */
@@ -41,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mEtname = findViewById (R.id.mEtname);
-        mEtpass = findViewById (R.id.mEtpass);
+
         recyclerView = findViewById (R.id.mRv);
         database = new DBhelper (this);
         changeListSend();
@@ -50,28 +54,76 @@ public class MainActivity extends AppCompatActivity {
         findViewById (R.id.btnAddPass).setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View view) {
-                //TODO add new pass to Sqlite
-                String    mName=mEtname.getText ().toString ();
-                String     mPassword=mEtpass.getText ().toString ();
-                if(mName.isEmpty ()&&mPassword.isEmpty ()) {
-                    Toast.makeText (MainActivity.this,"no value",Toast.LENGTH_SHORT).show();
 
-                } else{
-                    database.insertNewPass (mName,mPassword);
-                    changeListSend();
-                    mEtname.setText ("");
-                    mEtpass.setText ("");
 
-                }
-                mEtname.clearFocus ();
-                mEtpass.clearFocus ();
+                final Dialog dialog = new Dialog (MainActivity.this, R.style.AppTheme_Dark_Dialog);
+                dialog.setContentView (R.layout.custom_dialog_box);
+                 mTxtPass =dialog. findViewById (R.id.mTxtPass);
+                mEtname =dialog. findViewById (R.id.mEtname);
+
+                dialog.findViewById (R.id.mGeneratePass)
+                        .setOnClickListener (new View.OnClickListener () {
+                            @Override
+                            public void onClick (View v) {
+
+                                mTxtPass.setText (getSaltString());
+
+
+                            }
+                        });
+                dialog.findViewById (R.id.mAddNew)
+                        .setOnClickListener (new View.OnClickListener () {
+                            @Override
+                            public void onClick (View v) {
+                                mName=mEtname.getText ().toString ();
+                                pass=mTxtPass.getText ().toString ();
+
+                                if(mName.isEmpty ()&&pass.isEmpty ()) {
+                                    Toast.makeText (MainActivity.this,"no value",Toast.LENGTH_SHORT).show();
+
+                                } else{
+                                    //TODO add new pass to Sqlite
+
+                                    database.insertNewPass (mName,pass);
+                                    changeListSend();
+                                    Toast.makeText (MainActivity.this,"Success",Toast.LENGTH_SHORT).show();
+                                    mName="";
+                                    pass="";
+                                }
+                                mEtname.clearFocus ();
+
+
+
+                            }
+                        });
+                dialog.findViewById (R.id.mClose)
+                        .setOnClickListener (new View.OnClickListener () {
+                                                 @Override
+                                                 public void onClick (View v) {
+                                                     dialog.dismiss ();
+                                                 }
+                                             });
+                dialog.show ();
+
+
 
             }
         });
 
     }
 
+    protected String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%&*()_+-=[]|,./?><";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 18) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
 
+    }
 
     //TODO method work with RecyclerView
     private void changeListSend () {
