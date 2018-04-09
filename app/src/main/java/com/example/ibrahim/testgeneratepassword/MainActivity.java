@@ -53,10 +53,28 @@ public class MainActivity extends AppCompatActivity {
         database = new DBhelper (this);
         changeListSend();
         createFloatingWidget();
+        findViewById (R.id.btnDelete).setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick (View view) {
+                StringBuilder stringBuilder = new StringBuilder();
+
+                for (Passwords datamodels : datamodel) {
+                    if (datamodels.isSelected()) {
+                        if (stringBuilder.length() > 0)
+                            stringBuilder.append(", ");
+                        stringBuilder.append(datamodels.getName ());
+                        database.deleteRec (new String[] { datamodels.getId () });
+                        changeListSend();
+
+                    }
+                }
+                Toast.makeText(MainActivity.this, stringBuilder.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
         findViewById (R.id.btnAddPass).setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View view) {
-
 
                 final Dialog dialog = new Dialog (MainActivity.this, R.style.AppTheme_Dark_Dialog);
                 dialog.setContentView (R.layout.custom_dialog_box);
@@ -70,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 mTxtPass.setText (getSaltString());
 
+                                changeListSend();
 
                             }
                         });

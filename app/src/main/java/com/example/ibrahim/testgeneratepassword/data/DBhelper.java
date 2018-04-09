@@ -58,7 +58,7 @@ public class DBhelper extends SQLiteOpenHelper
             while (cursor.moveToNext ()) {
 
 
-                long id = cursor.getLong (cursor.getColumnIndexOrThrow (ID));
+                String id = cursor.getString (cursor.getColumnIndexOrThrow (ID));
                 String name = cursor.getString (cursor.getColumnIndexOrThrow (NAME_COLUMN));
                 String password = cursor.getString (cursor.getColumnIndexOrThrow (PASSWORD_COLUMN));
 
@@ -95,7 +95,7 @@ public class DBhelper extends SQLiteOpenHelper
 
 
         }
-        public void delete(Long Id) {
+        public void delete(long Id) {
             SQLiteDatabase db = this.getWritableDatabase();
 
             try {
@@ -105,6 +105,20 @@ public class DBhelper extends SQLiteOpenHelper
             catch(Exception e) {
                 e.printStackTrace ();
             }
+        }
+
+        public void deleteRec(String[] ids) { //ids is an array
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            db.delete(TABLE_PASSWORD,
+                    "CAST("+ID+" AS TEXT) IN ("
+                            + new String(new char[ids.length-1]).
+                            replace("\0", "?,") + "?)", ids);
+
+            for (int i = 0; i < ids.length; i++) {
+                db.delete(TABLE_PASSWORD, ID+" = "+i, null);
+            }
+            db.close();
         }
 
 }

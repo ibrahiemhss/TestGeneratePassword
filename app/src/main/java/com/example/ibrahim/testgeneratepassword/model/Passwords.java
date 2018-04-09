@@ -8,26 +8,31 @@ import android.content.Context;
 
 public class Passwords {
 
-    long id;
+    String id;
     String name;
     String password;
-    Context context;
+    private boolean isSelected;
 
-    public Passwords (Context context) {
-        this.context = context;
+
+    public boolean isSelected () {
+        return isSelected;
     }
 
-    public Passwords (long id, String name, String password) {
+    public void setSelected (boolean selected) {
+        isSelected = selected;
+    }
+
+    public Passwords (String id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;
     }
 
-    public long getId () {
+    public String getId () {
         return id;
     }
 
-    public void setId (long id) {
+    public void setId (String id) {
         this.id = id;
     }
 
@@ -46,4 +51,6 @@ public class Passwords {
     public void setPassword (String password) {
         this.password = password;
     }
+
+
 }

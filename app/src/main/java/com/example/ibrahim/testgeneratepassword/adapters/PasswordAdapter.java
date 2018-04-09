@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,9 +57,10 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
     public void onBindViewHolder(final MyHolder holder, final int position) {
         final Passwords SH = passwords.get (position);
 
-    //    holder.id.setText (String.valueOf (SH.getId ()));
+        //    holder.id.setText (String.valueOf (SH.getId ()));
         holder.name.setText (SH.getName ());
         holder.password.setText (SH.getPassword ());
+        holder.checkbox.setOnCheckedChangeListener(null);
 
         holder.copyImage.setOnClickListener (new View.OnClickListener () {
             @Override
@@ -68,7 +71,13 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
                 Toast.makeText(context, "Copied to Clipboard!", Toast.LENGTH_SHORT).show();
             }
         });
-        holder.imgRemove.setOnClickListener (new View.OnClickListener () {
+        holder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                passwords.get(holder.getAdapterPosition()).setSelected(isChecked);
+            }
+        });
+      /*  holder.imgRemove.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View view) {
 
@@ -93,7 +102,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
                                 removeAt(position);
 
                                 DBhelper dBhelper=new DBhelper (context);
-                                dBhelper.delete (SH.getId ());
+                                dBhelper.delete (Long.parseLong (SH.getId ()));
                                 passwords = dBhelper.getdata ();
                                 dialog.dismiss ();
 
@@ -103,11 +112,11 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
                 dialog.show ();
 
             }
-        });
+        });*/
     }
     public void removeAt(int position) {
         passwords.remove(position);
-      notifyItemRemoved(position);
+        notifyItemRemoved(position);
         notifyItemRangeChanged(position, passwords.size());
     }
     @Override
@@ -123,26 +132,31 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
 
 
 
-    public class MyHolder extends RecyclerView.ViewHolder{
+    public class MyHolder extends RecyclerView.ViewHolder {
 
         TextView id;
         TextView name;
         TextView password;
-        ImageView copyImage,imgRemove;
+        ImageView copyImage;//;,imgRemove;
         RecyclerView   mListView;
+        private CheckBox checkbox;
 
         MyHolder(View itemView) {
             super(itemView);
 
-          //  id = (TextView) itemView.findViewById( R.id.txtId);
+            //  id = (TextView) itemView.findViewById( R.id.txtId);
             name = (TextView) itemView.findViewById( R.id.txtName);
             password = (TextView) itemView.findViewById( R.id.txtPassword);
             copyImage = (ImageView) itemView.findViewById( R.id.copyImage);
-            imgRemove = (ImageView) itemView.findViewById( R.id.imgRemove);
+           // imgRemove = (ImageView) itemView.findViewById( R.id.imgRemove);
+            checkbox = (CheckBox) itemView.findViewById( R.id.checkbox);
 
             mListView =itemView.findViewById(R.id.mRv);
 
 
         }
+
+
+
 
     }}
