@@ -1,6 +1,7 @@
 package com.example.ibrahim.testgeneratepassword;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     EditText     mEtname;
     TextView   mTxtPass;
     String    mName,pass;
+
     //    String mName,mPassword;
     Locale localelang;
 
@@ -78,10 +80,15 @@ public class MainActivity extends AppCompatActivity {
                                 mName=mEtname.getText ().toString ();
                                 pass=mTxtPass.getText ().toString ();
 
-                                if(mName.isEmpty ()&&pass.isEmpty ()) {
+                                if(mName.isEmpty ()) {
                                     Toast.makeText (MainActivity.this,"no value",Toast.LENGTH_SHORT).show();
 
-                                } else{
+                                } else if(pass.isEmpty ()){
+                                    Toast.makeText (MainActivity.this,"no value",Toast.LENGTH_SHORT).show();
+
+                                }
+
+                                else{
                                     //TODO add new pass to Sqlite
 
                                     database.insertNewPass (mName,pass);
@@ -91,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
                                     pass="";
                                 }
                                 mEtname.clearFocus ();
-
-
 
                             }
                         });
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO method work with RecyclerView
-    private void changeListSend () {
+    public void changeListSend () {
         database = new DBhelper (MainActivity.this);
         datamodel = database.getdata ();
         RecyclerView.LayoutManager reLayoutManager = new LinearLayoutManager (getApplicationContext ());

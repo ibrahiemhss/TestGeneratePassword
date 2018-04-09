@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -14,13 +15,23 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ibrahim.testgeneratepassword.adapters.PasswordAdapter;
 import com.example.ibrahim.testgeneratepassword.data.DBhelper;
+import com.example.ibrahim.testgeneratepassword.model.Passwords;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by sonu on 28/03/17.
@@ -32,8 +43,10 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
     private ImageView remove_image_view;
     private Point szWindow = new Point ();
     private View removeFloatingWidgetView;
-    private EditText mFloatEtname,mFloatEtpass;
+    private EditText mFloatEtname;
+   private TextView mFloatxtPass;
     private Button floating_add_label;
+    private  ImageView mImgGenerator;
     DBhelper database;
 
 
@@ -76,6 +89,7 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
         //Inflate the removing view layout we created
         removeFloatingWidgetView = inflater.inflate(R.layout.remove_floating_widget_layout, null);
 
+
         //Add the view to the window.
         WindowManager.LayoutParams paramRemove = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -106,7 +120,7 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT);
 
         //Specify the view position
@@ -124,10 +138,9 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
 
         //find id of the expanded view layout
         expandedView = mFloatingWidgetView.findViewById(R.id.expanded_container);
+        mFloatEtname=mFloatingWidgetView.findViewById (R.id.mFloatEtname);
+        mFloatxtPass=mFloatingWidgetView.findViewById (R.id.mFloatxtPass);
 
-        //find id of the edit text
-        mFloatEtname = mFloatingWidgetView.findViewById(R.id.mFloatEtname);
-        mFloatEtpass = mFloatingWidgetView.findViewById(R.id.mFloatEtpass);
 
     }
 
@@ -193,8 +206,8 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
                         y_init_cord = y_cord;
 
                         //remember the initial position.
-                        x_init_margin = layoutParams.x;
-                        y_init_margin = layoutParams.y;
+                       x_init_margin = layoutParams.x;
+                      y_init_margin = layoutParams.y;
 
                         return true;
                     case MotionEvent.ACTION_UP:
@@ -211,7 +224,18 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
                             break;
                         }
 
+                        isLongClick = false;
+                        removeFloatingWidgetView.setVisibility(View.GONE);
+                        remove_image_view.getLayoutParams().height = remove_img_height;
+                        remove_image_view.getLayoutParams().width = remove_img_width;
+                        handler_longClick.removeCallbacks(runnable_longClick);
 
+                        //If user drag and drop the floating widget view into remove view then stop the service
+                        if (inBounded) {
+                            stopSelf();
+                            inBounded = false;
+                            break;
+                        }
                         //Get the difference between initial coordinate and current coordinate
                         int x_diff = x_cord - x_init_cord;
                         int y_diff = y_cord - y_init_cord;
@@ -309,6 +333,8 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
         mFloatingWidgetView.findViewById(R.id.close_expanded_view).setOnClickListener(this);
         mFloatingWidgetView.findViewById(R.id.open_activity_button).setOnClickListener(this);
         mFloatingWidgetView.findViewById(R.id.floating_add_label).setOnClickListener(this);
+        mFloatingWidgetView.findViewById(R.id.mImgGenerator).setOnClickListener(this);
+
 
     }
 
@@ -332,28 +358,71 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
 
                 //close the service and remove view from the view hierarchy
                 stopSelf();
+                break;
+
             case R.id.floating_add_label:
-                //add new pssword to sqlite
+                //add new name and  pssword to sqlite
+                mFloatingWidgetView.setFocusable(true);
                 String    mName=mFloatEtname.getText ().toString ();
-                String     mPassword=mFloatEtpass.getText ().toString ();
-                if(mName.isEmpty ()&&mPassword.isEmpty ()) {
+                String     mPassword=mFloatxtPass.getText ().toString ();
+                if(mName.isEmpty ()) {
                     Toast.makeText (FloatingWidgetService.this,"no value",Toast.LENGTH_SHORT).show();
 
-                } else{
-
-                    database.insertNewPass (mName,mPassword);
+                } else if(mPassword.isEmpty ()){
+                    Toast.makeText (FloatingWidgetService.this,"no value",Toast.LENGTH_SHORT).show();
+                }else{
+                    List<Passwords> datamodel=new ArrayList<> ();
+                    PasswordAdapter     passwordAdapter = new PasswordAdapter (datamodel,this);
+                    database=new DBhelper (this);
+                    database.insertNewPass (mFloatEtname.getText ().toString (),mPassword);
+                    passwordAdapter.notifyDataSetChanged ();
                     mFloatEtname.setText ("");
-                    mFloatEtpass.setText ("");
 
                 }
                 mFloatEtname.clearFocus ();
-                mFloatEtpass.clearFocus ();
+
+                break;
+
+            case R.id.mImgGenerator:
+                mFloatxtPass.setText (getSaltString());
+                mFloatEtname.requestFocus();
 
                 break;
 
         }
     }
+    protected String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%&*()_+-=[]|,./?><";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 18) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
 
+    }
+
+    public static Rect locateView(View v)
+    {
+        int[] loc_int = new int[2];
+        if (v == null) return null;
+        try
+        {
+            v.getLocationOnScreen(loc_int);
+        } catch (NullPointerException npe)
+        {
+            //Happens when the view doesn't exist on screen anymore.
+            return null;
+        }
+        Rect location = new Rect();
+        location.left = loc_int[0];
+        location.top = loc_int[1];
+        location.right = location.left + v.getWidth();
+        location.bottom = location.top + v.getHeight();
+        return location;
+    }
     /*  on Floating Widget Long Click, increase the size of remove view as it look like taking focus */
     private void onFloatingWidgetLongClick() {
         //Get remove Floating view params

@@ -45,73 +45,130 @@
             android:id="@+id/expanded_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="@drawable/item_border"
             android:gravity="center"
             android:visibility="gone"
             android:orientation="horizontal"
             android:padding="8dp"
             >
-
-            <ImageView
-                android:id="@+id/floating_widget_image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher" />
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:orientation="vertical">
+                <!--  ImageView to Close Expanded View  -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/close_expanded_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_close_black_24dp" />
+
+                <!--  ImageView to Open Activity  -->
+                <ImageView
+                    android:id="@+id/open_activity_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_aspect_ratio_black_24dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/floating_widget_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <EditText
-                        android:id="@+id/mFloatEtname"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical">
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:hint="password"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <EditText
-                        android:id="@+id/mFloatEtpass"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:padding="3dp"
+                            android:background="@drawable/item_border"
+                            android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/line2"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:background="@drawable/white_circle_shape">
+
+                            <ImageView
+                                android:id="@+id/mImgGenerator"
+                                android:layout_width="25dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/ic_refresh" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/mFloatxtPass"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="bottom"
+                            android:textColor="@color/colorWhite"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:text="hhhhhhhhhhhhhhhhhhhh" />
+                        </LinearLayout>
+                        <EditText
+                            android:background="@drawable/item_border"
+                            android:id="@+id/mFloatEtname"
+                            android:textAlignment="center"
+                            android:layout_width="match_parent"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:hint="name"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorGreen"
+                            android:textColorHint="@color/colorWhite"
+                            android:layout_height="match_parent"
+                            android:ems="10"
+                            android:inputType="textPersonName"/>
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/floating_add_label"
                         android:layout_width="match_parent"
-                        android:hint="name"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
+                        android:background="@drawable/item_border"
+                        android:padding="5dp"
+                        android:textAlignment="center"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/floating_add_label"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
-                <Button
-                    android:id="@+id/floating_add_label"
-                    android:layout_width="wrap_content"
-                    android:background="@drawable/item_border"
-                    android:padding="5dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/floating_add_label"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp" />
+                </LinearLayout>
 
 
             </LinearLayout>
 
-            <!--  ImageView to Close Expanded View  -->
-            <ImageView
-                android:id="@+id/close_expanded_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:src="@drawable/ic_close_black_24dp" />
 
-            <!--  ImageView to Open Activity  -->
-            <ImageView
-                android:id="@+id/open_activity_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:src="@drawable/ic_aspect_ratio_black_24dp" />
-        </LinearLayout>
+            </LinearLayout>
+
+
     </RelativeLayout>
 </FrameLayout>

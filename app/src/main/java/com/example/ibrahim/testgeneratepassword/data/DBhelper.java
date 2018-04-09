@@ -95,5 +95,16 @@ public class DBhelper extends SQLiteOpenHelper
 
 
         }
+        public void delete(Long Id) {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            try {
+
+                db.delete(TABLE_PASSWORD, ID+" = "+Id, null);
+            }
+            catch(Exception e) {
+                e.printStackTrace ();
+            }
+        }
 
 }
