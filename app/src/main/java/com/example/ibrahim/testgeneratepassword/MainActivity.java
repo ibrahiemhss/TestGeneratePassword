@@ -1,5 +1,4 @@
 package com.example.ibrahim.testgeneratepassword;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import com.example.ibrahim.testgeneratepassword.data.PasswordGenerator;
 import com.example.ibrahim.testgeneratepassword.model.Passwords;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         database = new DBhelper (this);
         changeListSend();
         createFloatingWidget();
+
         findViewById (R.id.btnDelete).setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View view) {
@@ -71,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, stringBuilder.toString(), Toast.LENGTH_LONG).show();
             }
         });
+       findViewById (R.id.sellectAll)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                            for(Passwords e: datamodel) {
+                                e.setSelected (true);
+                            }
+                        changeListSend();                    }
+                });
 
         findViewById (R.id.btnAddPass).setOnClickListener (new View.OnClickListener () {
             @Override
@@ -78,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
 
                 final Dialog dialog = new Dialog (MainActivity.this, R.style.AppTheme_Dark_Dialog);
                 dialog.setContentView (R.layout.custom_dialog_box);
-                 mTxtPass =dialog. findViewById (R.id.mTxtPass);
+                mTxtPass =dialog. findViewById (R.id.mTxtPass);
                 mEtname =dialog. findViewById (R.id.mEtname);
+
+
 
                 dialog.findViewById (R.id.mGeneratePass)
                         .setOnClickListener (new View.OnClickListener () {
@@ -89,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                                 mTxtPass.setText (getSaltString());
 
                                 changeListSend();
-
+                                passwordAdapter.notifyDataSetChanged ();
                             }
                         });
                 dialog.findViewById (R.id.mAddNew)
@@ -122,11 +134,11 @@ public class MainActivity extends AppCompatActivity {
                         });
                 dialog.findViewById (R.id.mClose)
                         .setOnClickListener (new View.OnClickListener () {
-                                                 @Override
-                                                 public void onClick (View v) {
-                                                     dialog.dismiss ();
-                                                 }
-                                             });
+                            @Override
+                            public void onClick (View v) {
+                                dialog.dismiss ();
+                            }
+                        });
                 dialog.show ();
 
 
@@ -135,7 +147,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    private ArrayList<Passwords> getModel(boolean isSelect){
+        ArrayList<Passwords> list = new ArrayList<>();
+        for(int i = 0; i < 4; i++){
 
+            Passwords model = new Passwords(isSelect);
+            model.setSelected(isSelect);
+        //    model.setAnimal(animallist[i]);
+            list.add(model);
+        }
+        return list;
+    }
     protected String getSaltString() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%&*()_+-=[]|,./?><";
         StringBuilder salt = new StringBuilder();
@@ -153,12 +175,13 @@ public class MainActivity extends AppCompatActivity {
     public void changeListSend () {
         database = new DBhelper (MainActivity.this);
         datamodel = database.getdata ();
+
         RecyclerView.LayoutManager reLayoutManager = new LinearLayoutManager (getApplicationContext ());
         recyclerView.setLayoutManager (reLayoutManager);
         recyclerView.setItemAnimator (new DefaultItemAnimator ());
         passwordAdapter = new PasswordAdapter (datamodel,this);
         recyclerView.setAdapter (passwordAdapter);
-
+        passwordAdapter.notifyDataSetChanged ();
         recyclerView.getLayoutManager().scrollToPosition(recyclerView.getAdapter().getItemCount()-1);
 
     }
@@ -185,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
     /*  Start Floating widget service and finish current activity */
     private void startFloatingWidgetService() {
         startService(new Intent (MainActivity.this, FloatingWidgetService.class));
-     //   finish();
+        //   finish();
     }
 
     @Override

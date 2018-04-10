@@ -8,12 +8,15 @@ import android.content.Context;
 
 public class Passwords {
 
+
     String id;
     String name;
     String password;
     private boolean isSelected;
-
-
+Context context;
+    public Passwords (boolean isSelected) {
+        this.isSelected = isSelected;
+    }
     public boolean isSelected () {
         return isSelected;
     }

@@ -60,7 +60,20 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
         //    holder.id.setText (String.valueOf (SH.getId ()));
         holder.name.setText (SH.getName ());
         holder.password.setText (SH.getPassword ());
+     //   holder.checkbox.setOnCheckedChangeListener(null);
+        //holder.checkbox.setChecked(SH.isSelected ());
         holder.checkbox.setOnCheckedChangeListener(null);
+        holder.checkbox.setChecked(SH.isSelected());
+
+        holder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener () {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //set your object's last status
+                SH.setSelected(isChecked);
+            }
+        });
+
+
 
         holder.copyImage.setOnClickListener (new View.OnClickListener () {
             @Override
@@ -80,19 +93,13 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
       /*  holder.imgRemove.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View view) {
-
-
-
                 final Dialog dialog = new Dialog (context, R.style.AppTheme_Dark_Dialog);
                 dialog.setContentView (R.layout.simple_dialog);
-
                 dialog.findViewById (R.id.cancelD)
                         .setOnClickListener (new View.OnClickListener () {
                             @Override
                             public void onClick (View v) {
-
                                 dialog.dismiss ();
-
                             }
                         });
                 dialog.findViewById (R.id.yesD)
@@ -100,17 +107,13 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
                             @Override
                             public void onClick (View v) {
                                 removeAt(position);
-
                                 DBhelper dBhelper=new DBhelper (context);
                                 dBhelper.delete (Long.parseLong (SH.getId ()));
                                 passwords = dBhelper.getdata ();
                                 dialog.dismiss ();
-
                             }
                         });
-
                 dialog.show ();
-
             }
         });*/
     }
@@ -143,12 +146,13 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.MyHold
 
         MyHolder(View itemView) {
             super(itemView);
+            this.setIsRecyclable(false);
 
             //  id = (TextView) itemView.findViewById( R.id.txtId);
             name = (TextView) itemView.findViewById( R.id.txtName);
             password = (TextView) itemView.findViewById( R.id.txtPassword);
             copyImage = (ImageView) itemView.findViewById( R.id.copyImage);
-           // imgRemove = (ImageView) itemView.findViewById( R.id.imgRemove);
+            // imgRemove = (ImageView) itemView.findViewById( R.id.imgRemove);
             checkbox = (CheckBox) itemView.findViewById( R.id.checkbox);
 
             mListView =itemView.findViewById(R.id.mRv);

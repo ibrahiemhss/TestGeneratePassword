@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ibrahim.testgeneratepassword">
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <!--  Permission required to draw floating widget over other apps  -->
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Permission required to draw floating widget over other apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
@@ -12,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".LockScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,11 +21,14 @@
             </intent-filter>
         </activity>
 
-        <!--  Declare FloatingWidget Service over here and set enabled true -->
+        <!-- Declare FloatingWidget Service over here and set enabled true -->
         <service
             android:name=".FloatingWidgetService"
             android:enabled="true"
             android:exported="false" />
+
+        <activity android:name=".MainActivity" />
+        <activity android:name=".LockScreenTwo"></activity>
     </application>
 
 </manifest>
